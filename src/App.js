@@ -9,17 +9,19 @@ function App() {
 
   const [step, setStep] = useState(0);
   const [completed, setCompleted] = useState(false);
-  const [name, setName] = useState("");
 
+  const [name, setName] = useState("");
   const [currentEulogy, setCurrentEulogy] = useState("");
   const [futureEulogy, setFutureEulogy] = useState("");
   const [analysis, setAnalysis] = useState("");
 
+  const progress = Math.round((step / 4) * 100);
+
   const validateStep = () => {
     if (!name.trim()) return false;
-    if (step === 1 && currentEulogy.trim().length < 50) return false;
-    if (step === 2 && futureEulogy.trim().length < 50) return false;
-    if (step === 3 && analysis.trim().length < 30) return false;
+    if (step === 2 && currentEulogy.trim().length < 80) return false;
+    if (step === 3 && futureEulogy.trim().length < 80) return false;
+    if (step === 4 && analysis.trim().length < 40) return false;
     return true;
   };
 
@@ -50,6 +52,7 @@ function App() {
     y += 10;
 
     doc.setFont("times", "normal");
+    doc.setFontSize(12);
     doc.text(`Student Name: ${name}`, 20, y);
     y += 8;
     doc.text(`Date: ${new Date().toLocaleString()}`, 20, y);
@@ -75,8 +78,8 @@ function App() {
     };
 
     addSection("Part 1 – Current Eulogy", currentEulogy);
-    addSection("Part 2 – Future Eulogy", futureEulogy);
-    addSection("Part 3 – Reflection & Patterns", analysis);
+    addSection("Part 2 – Five-Year Future Eulogy", futureEulogy);
+    addSection("Part 3 – Reflection & Pattern Extraction", analysis);
 
     const safeName = name.trim().replace(/[^a-zA-Z0-9 ]/g, "");
     doc.save(`Eulogy Exercise - ${safeName}.pdf`);
@@ -91,7 +94,8 @@ function App() {
             Your Eulogy Exercise Has Been Downloaded
           </h2>
           <p>
-            Now go to the bottom of this course page and upload your PDF in the Assignment Submission Box.
+            Now go to the bottom of this course page and upload your PDF
+            in the Assignment Submission Box.
           </p>
           <button style={styles.retryButton} onClick={generatePDF}>
             Click Here to Retry Download
@@ -105,22 +109,24 @@ function App() {
     <div style={styles.page}>
       <div style={styles.container}>
 
+        {/* Progress Bar */}
+        {step > 0 && step <= 4 && (
+          <div style={styles.progressWrapper}>
+            <div style={{ ...styles.progressBar, width: `${progress}%` }} />
+          </div>
+        )}
+
+        {/* STEP 0 – DISCLAIMER */}
         {step === 0 && (
           <>
             <h1 style={{ color: "#0f766e" }}>
               Eulogy Exercise – Lens of Becoming
             </h1>
 
-            <p>
-              This exercise helps you uncover what truly matters by imagining
-              how your life would be remembered.
-            </p>
-
-            <ul>
-              <li>Be honest and unfiltered.</li>
-              <li>Write without judgment.</li>
-              <li>This is private and reflective.</li>
-            </ul>
+            <div style={styles.noticeBox}>
+              This is a reflective and emotionally meaningful exercise.
+              Write honestly. This space is private unless you choose to share.
+            </div>
 
             <input
               type="text"
@@ -131,18 +137,67 @@ function App() {
             />
 
             <button style={styles.primaryButton} onClick={next}>
-              Start Exercise
+              Continue to Instructions
             </button>
           </>
         )}
 
+        {/* STEP 1 – INSTRUCTIONS */}
         {step === 1 && (
           <>
-            <h2>Part 1 – Current Eulogy</h2>
+            <h2>How to Do the Eulogy Exercise</h2>
+
+            <div style={styles.noticeBox}>
+              <p>
+                The goal of this exercise is to uncover what you truly want in life
+                by understanding who you want to become.
+              </p>
+
+              <p>
+                Effective goal setting starts with clarity about your deeper desires—
+                not the superficial ones influenced by societal or cultural expectations.
+              </p>
+
+              <p>
+                Goals like owning a specific car, making a million dollars,
+                or “10X-ing” your business are fine but often reflect external
+                pressures rather than your authentic aspirations.
+              </p>
+
+              <p>
+                To uncover your true self, you must dig deeper,
+                beyond the surface, to the fertile soil of what allows you to flourish.
+              </p>
+            </div>
+
+            <h3>Part One – The Current Eulogy</h3>
             <p>
               Imagine you died today. Write honestly about your achievements,
-              fears, failures, and unfulfilled dreams.
+              fears, compromises, regrets, and unfinished dreams.
             </p>
+
+            <h3>Part Two – The Five-Year Future</h3>
+            <p>
+              Now imagine you were given five years to live and fully embraced
+              your potential. What changed? What risks did you take?
+            </p>
+
+            <h3>Part Three – Extract the Pattern</h3>
+            <p>
+              Compare both versions. Identify repeating themes.
+              What kind of person do you want to become?
+            </p>
+
+            <button style={styles.primaryButton} onClick={next}>
+              Begin Writing
+            </button>
+          </>
+        )}
+
+        {/* STEP 2 – CURRENT EULOGY */}
+        {step === 2 && (
+          <>
+            <h2>Part 1 – Current Eulogy</h2>
 
             <textarea
               rows="12"
@@ -157,13 +212,10 @@ function App() {
           </>
         )}
 
-        {step === 2 && (
+        {/* STEP 3 – FUTURE EULOGY */}
+        {step === 3 && (
           <>
-            <h2>Part 2 – Future Eulogy</h2>
-            <p>
-              Imagine you were given five years to live and fully embraced your
-              dreams. Write the eulogy of who you became.
-            </p>
+            <h2>Part 2 – Five-Year Future Eulogy</h2>
 
             <textarea
               rows="12"
@@ -178,13 +230,10 @@ function App() {
           </>
         )}
 
-        {step === 3 && (
+        {/* STEP 4 – ANALYSIS */}
+        {step === 4 && (
           <>
-            <h2>Part 3 – Analyze & Extract Patterns</h2>
-            <p>
-              What themes repeat? What relationships matter? What values stand
-              out? What kind of person do you want to become?
-            </p>
+            <h2>Part 3 – Reflection & Pattern Extraction</h2>
 
             <textarea
               rows="8"
@@ -248,6 +297,24 @@ const styles = {
     borderRadius: "8px",
     border: "none",
     cursor: "pointer"
+  },
+  noticeBox: {
+    backgroundColor: "#ecfdf5",
+    padding: "15px",
+    borderLeft: "4px solid #0f766e",
+    borderRadius: "8px",
+    marginBottom: "25px"
+  },
+  progressWrapper: {
+    height: "6px",
+    backgroundColor: "#e2e8f0",
+    borderRadius: "4px",
+    marginBottom: "20px"
+  },
+  progressBar: {
+    height: "100%",
+    backgroundColor: "#0f766e",
+    transition: "width 0.4s ease"
   }
 };
 
