@@ -149,7 +149,7 @@ function App() {
             />
 
             <button style={styles.primaryButton} onClick={next}>
-              Start Assignment
+              Next
             </button>
           </>
         )}
