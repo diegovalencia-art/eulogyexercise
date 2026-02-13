@@ -30,6 +30,10 @@ function App() {
     setStep(step + 1);
   };
 
+  const back = () => {
+    if (step > 0) setStep(step - 1);
+  };
+
   const generatePDF = () => {
 
     const doc = new jsPDF();
@@ -71,7 +75,6 @@ function App() {
       y += 8;
 
       doc.setFont(undefined, "normal");
-
       const split = doc.splitTextToSize(content, 170);
       doc.text(split, 20, y);
       y += split.length * 7 + 12;
@@ -109,7 +112,6 @@ function App() {
     <div style={styles.page}>
       <div style={styles.container}>
 
-        {/* Progress Bar */}
         {step > 0 && step <= 4 && (
           <div style={styles.progressWrapper}>
             <div style={{ ...styles.progressBar, width: `${progress}%` }} />
@@ -124,8 +126,18 @@ function App() {
             </h1>
 
             <div style={styles.noticeBox}>
-              This is a reflective and emotionally meaningful exercise.
-              Write honestly. This space is private unless you choose to share.
+              <p>
+                Please make sure to click the <strong>"Start Assignment"</strong> button
+                before answering the questions.
+              </p>
+            </div>
+
+            <div style={styles.noticeBox}>
+              <p>
+                This is a reflective and emotionally meaningful exercise.
+                Write honestly and without filtering. This space is private
+                unless you choose to share it.
+              </p>
             </div>
 
             <input
@@ -137,7 +149,7 @@ function App() {
             />
 
             <button style={styles.primaryButton} onClick={next}>
-              Continue to Instructions
+              Start Assignment
             </button>
           </>
         )}
@@ -170,27 +182,15 @@ function App() {
               </p>
             </div>
 
-            <h3>Part One – The Current Eulogy</h3>
-            <p>
-              Imagine you died today. Write honestly about your achievements,
-              fears, compromises, regrets, and unfinished dreams.
-            </p>
+            <div style={styles.buttonRow}>
+              <button style={styles.secondaryButton} onClick={back}>
+                Go Back
+              </button>
 
-            <h3>Part Two – The Five-Year Future</h3>
-            <p>
-              Now imagine you were given five years to live and fully embraced
-              your potential. What changed? What risks did you take?
-            </p>
-
-            <h3>Part Three – Extract the Pattern</h3>
-            <p>
-              Compare both versions. Identify repeating themes.
-              What kind of person do you want to become?
-            </p>
-
-            <button style={styles.primaryButton} onClick={next}>
-              Begin Writing
-            </button>
+              <button style={styles.primaryButton} onClick={next}>
+                Begin Writing
+              </button>
+            </div>
           </>
         )}
 
@@ -206,9 +206,15 @@ function App() {
               style={styles.textarea}
             />
 
-            <button style={styles.primaryButton} onClick={next}>
-              Continue
-            </button>
+            <div style={styles.buttonRow}>
+              <button style={styles.secondaryButton} onClick={back}>
+                Go Back
+              </button>
+
+              <button style={styles.primaryButton} onClick={next}>
+                Continue
+              </button>
+            </div>
           </>
         )}
 
@@ -224,9 +230,15 @@ function App() {
               style={styles.textarea}
             />
 
-            <button style={styles.primaryButton} onClick={next}>
-              Continue
-            </button>
+            <div style={styles.buttonRow}>
+              <button style={styles.secondaryButton} onClick={back}>
+                Go Back
+              </button>
+
+              <button style={styles.primaryButton} onClick={next}>
+                Continue
+              </button>
+            </div>
           </>
         )}
 
@@ -242,9 +254,15 @@ function App() {
               style={styles.textarea}
             />
 
-            <button style={styles.primaryButton} onClick={generatePDF}>
-              Download My Eulogy Exercise
-            </button>
+            <div style={styles.buttonRow}>
+              <button style={styles.secondaryButton} onClick={back}>
+                Go Back
+              </button>
+
+              <button style={styles.primaryButton} onClick={generatePDF}>
+                Download My Eulogy Exercise
+              </button>
+            </div>
           </>
         )}
 
@@ -290,6 +308,14 @@ const styles = {
     border: "none",
     cursor: "pointer"
   },
+  secondaryButton: {
+    backgroundColor: "#64748b",
+    color: "white",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer"
+  },
   retryButton: {
     backgroundColor: "#f97316",
     color: "white",
@@ -297,6 +323,11 @@ const styles = {
     borderRadius: "8px",
     border: "none",
     cursor: "pointer"
+  },
+  buttonRow: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "20px"
   },
   noticeBox: {
     backgroundColor: "#ecfdf5",
